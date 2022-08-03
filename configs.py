@@ -1,13 +1,18 @@
+import sys
+import logging
+
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium_stealth import stealth
 
-from constants import BASE_DIR
+from constants import BASE_DIR, DT_FORMAT, LOG_FORMAT
 
 
-options = webdriver.ChromeOptions()
+options: Options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
-driver = webdriver.Chrome(
+driver: WebDriver = webdriver.Chrome(
     options=options,
     executable_path=fr"{BASE_DIR}\driver\chromedriver.exe"
 )
@@ -19,3 +24,14 @@ stealth(driver,
         renderer="Intel Iris OpenGL Engine",
         fix_hairline=True,
         )
+
+
+def config_logging():
+    logging.basicConfig(
+            level=logging.INFO,
+            format=LOG_FORMAT,
+            datefmt=DT_FORMAT,
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
+
+    logging.getLogger(__file__)
