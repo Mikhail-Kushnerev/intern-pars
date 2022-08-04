@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-BASE_DIR: Path = Path(__file__).parent
+BASE_DIR: Path = Path(__file__).parent.parent
 RESULT_DIR: Path = BASE_DIR / "results" / "csv"
 RESULT_DIR.mkdir(exist_ok=True, parents=True)
 URL: str = "https://www.detmir.ru/catalog/index/name/lego/"

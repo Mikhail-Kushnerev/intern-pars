@@ -62,7 +62,7 @@ def pars_site(items: list[WebElement]) -> dict[str, list[str]]:
 def main():
     config_logging()
     logging.info("Запуск парсера")
-    page: int = 42
+    page: int = 1
     while True:
         site: str = URL + "page/{}/".format(page)
         connect = check_connect(driver, site)
