@@ -1,7 +1,6 @@
 import time
 
 from requests import RequestException
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.webdriver import WebDriver
