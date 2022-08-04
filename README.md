@@ -66,7 +66,11 @@
   (linux) source venv/bin/activate
   pip install -r requirements.txt
   ```
-- Запустите **redis** (**redis-cli.exe** и **redis-server.exe**) из соотв. директории (см. <a href="#t1">дерево проект</a>)
+- Запустите **redis**
+  ```python
+  docker-compose up
+  ```
+- Запустите **redis-cli** внутри контейнера **redis**
 - В файле `constants.py` задайте переменной `URL` любую категорию для парсинга по примеру:
     ```python
     - https://www.detmir.ru/catalog/index/name/lego/
