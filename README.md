@@ -26,8 +26,18 @@
   <summary>
     <h2 id="t1">Структура проект</h2>
   </summary>
+
     ```cmd
     itern-pars
+    |   .gitignore
+    |   configs.py  <-- Конфигуратор парсера и логов
+    |   constants.py  <-- Дефолтные ссылки, форматы, пути и т.д.
+    |   LICENSE
+    |   main.py  <-- исполняемый файл
+    |   outputs.py  <-- представление в CSV-файле
+    |   README.md
+    |   requirements.txt
+    |   utils.py  <-- обработчик ошибок
     |
     +---driver  <-- Директория драйвера браузера
     |       chromedriver.exe  <-- Сам драйвер
@@ -42,16 +52,6 @@
     |
     +---results  <-- Директория с таблицами csv
     |   \---csv  <-- Одноименная директория
-    |
-    +---src
-    |   |   configs.py  <-- Конфигуратор парсера и логов
-    |   |   constants.py  <-- Дефолтные ссылки, форматы, пути и т.д.
-    |   |   main.py  <-- исполняемый файл
-    |   |   outputs.py  <-- представление в CSV-файле
-    |   |   utils.py  <-- обработчик ошибок
-    |   |   __init__.py
-    |   |   
-    |   \---__pycache__
     ```
 
 </details>
