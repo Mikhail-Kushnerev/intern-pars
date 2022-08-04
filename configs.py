@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium_stealth import stealth
 
-from src.constants import BASE_DIR, DT_FORMAT, LOG_FORMAT
+from constants import BASE_DIR, DT_FORMAT, LOG_FORMAT
 
 
 options: Options = webdriver.ChromeOptions()

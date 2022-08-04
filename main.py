@@ -7,10 +7,10 @@ from tqdm import tqdm
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 
-from src.constants import URL, PATTERN
-from src.configs import driver, config_logging, redis_client
-from src.utils import check_items, check_price, check_connect, check_click_opt
-from src.outputs import write_csv
+from constants import URL, PATTERN
+from configs import driver, config_logging, redis_client
+from utils import check_items, check_price, check_connect, check_click_opt
+from outputs import write_csv
 
 objects_history: dict[str, list[str]] = {}
 
