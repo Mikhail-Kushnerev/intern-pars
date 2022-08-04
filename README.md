@@ -59,7 +59,13 @@
 [⬆️Содержание](#содержание)
 
 ## Запуск
-
+- Активируйте вирт. окружение, установите зависимости:
+  ```python
+  py -m venv venv
+  (win) source venv/Scripts/activate
+  (linux) source venv/bin/activate
+  pip install -r requirements.txt
+  ```
 - Запустите **redis** (**redis-cli.exe** и **redis-server.exe**) из соотв. директории (см. <a href="#t1">дерево проект</a>)
 - В файле `constants.py` задайте переменной `URL` любую категорию для парсинга по примеру:
     ```python
