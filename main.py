@@ -7,34 +7,45 @@ from selenium.webdriver.remote.webelement import WebElement
 from tqdm import tqdm
 from selenium.webdriver.common.by import By
 from constants import URL, PATTERN
-from configs import driver, config_logging
+from configs import driver, config_logging, redis_client
 from utils import check_items, check_price, check_connect, check_click_opt
 from outputs import write_csv
-
 
 objects_history: dict[str, list[str]] = {}
 
 
-def pars_item() -> None:
-    for i in tqdm(objects_history.values()):
-        driver.get(i[0])
-        time.sleep(1)
+def pars_item(items) -> None:
+    """
+    Разбор товаров на ID и страну-производителя
+    :param items: список кортежей
+    """
+    for (link, target) in tqdm(items):
+        check_connect(driver, link)
+        time.sleep(0.5)
         check_click_opt(driver, By.CLASS_NAME, "nK")
+        time.sleep(0.5)
         div_tag: list[WebElement] = driver.find_elements(By.CSS_SELECTOR, ".c_5 .rt")
-        print(i[0], len(div_tag))
         string: Match[str] | None = re.search(PATTERN, div_tag[1].text)
         if string:
-            i.extend(string.group("ID", "country"))
-        driver.refresh()
+            target.extend(string.group("ID", "country"))
 
 
-def pars_site(items: list[object]) -> None:
-    for i in tqdm(items):
+def pars_site(items: list[WebElement]) -> dict[str, list[str]]:
+    """
+    Разбор конкретной страницы на название товара, цену (актуальную/нет), ссылки
+    :param items: список товаров
+    :return: промежуточный словарь для записи уникальных товаров
+    """
+    item_pars: list[tuple[str, list[str]]] = []
+    part_result: dict[str, list[str]] = {}
+    for i in items:
         target: WebElement = i.find_element(By.TAG_NAME, "a")
         link: str = target.get_attribute("href")
         name: WebElement = target.find_element(By.CSS_SELECTOR, ".SW")
-        if name.text in objects_history:
+        if (obj := name.text) in objects_history or obj.encode() in redis_client.keys():
             continue
+        with redis_client:
+            redis_client.set(obj, obj)
         promo: str = "null"
         div_tag = check_price(target, By.CSS_SELECTOR, ".S_6")
         if len(div_tag) == 2:
@@ -42,30 +53,37 @@ def pars_site(items: list[object]) -> None:
             div_tag: str = div_tag[0]
         div_tag: list[str] | str = re.findall(r"\d+", div_tag) if div_tag != "Нет в наличии" else div_tag
         objects_history[name.text] = [link, ''.join(div_tag), ''.join(promo)]
-    return pars_item()
+        item_pars.append((link, objects_history[obj]))
+        part_result[obj]: dict[str, list[str]] = objects_history[obj]
+    pars_item(item_pars)
+    return part_result
 
 
 def main():
-    logger = config_logging()
-    page: int = 1
+    config_logging()
+    logging.info("Запуск парсера")
+    page: int = 42
     while True:
         site: str = URL + "page/{}/".format(page)
         connect = check_connect(driver, site)
         if not connect:
-            logger.error("Дизконнект")
+            logging.error("Дизконнект")
             return
         logging.info(f"Есть соединение c {site}")
         time.sleep(1)
-        block: WebElement = check_items(driver, By.CLASS_NAME, "uo")
+        block: WebElement = check_items(driver, By.CSS_SELECTOR, ".dv .dV .uo")
         if not block:
             break
         items: list[WebElement] = block.find_elements(By.CSS_SELECTOR, ".vk .vm")
-        pars_site(items)
+        part_result: dict[str, list[str]] = pars_site(items)
+        logging.info(f"Запись данных страницы {page}")
+        write_csv(part_result)
         page += 1
-        driver.refresh()
     driver.quit()
-    logging.info("Запись файла")
-    write_csv(objects_history)
+    objects_history.clear()
+    with redis_client:
+        redis_client.flushdb()
+    logging.info("Завершение работы")
 
 
 if __name__ == "__main__":

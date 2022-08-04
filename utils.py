@@ -1,3 +1,5 @@
+import time
+
 from requests import RequestException
 
 from selenium.webdriver.common.by import By
@@ -12,11 +14,14 @@ def check_click_opt(driver: WebDriver, tag, value):
         pass
 
 
-def check_connect(driver, target):
+def check_connect(driver: WebDriver, target: str):
     try:
         driver.get(target)
     except RequestException:
-        raise "Ошибка соединения"
+        for _ in range(2):
+            time.sleep(3)
+            driver.refresh()
+        return driver.get(target)
     else:
         return True
 

@@ -1,6 +1,7 @@
 import sys
 import logging
 
+from redis import Redis
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -25,6 +26,8 @@ stealth(driver,
         fix_hairline=True,
         )
 
+redis_client: Redis = Redis()
+
 
 def config_logging():
     logging.basicConfig(
@@ -33,5 +36,4 @@ def config_logging():
             datefmt=DT_FORMAT,
             handlers=[logging.StreamHandler(sys.stdout)]
         )
-
     logging.getLogger(__file__)
