@@ -26,7 +26,6 @@
   <summary>
     <h2 id="t1">Структура проект</h2>
   </summary>
-
     ```cmd
     itern-pars
     |

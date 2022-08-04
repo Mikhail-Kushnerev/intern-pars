@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from constants import RESULT_DIR
+from src.constants import RESULT_DIR
 
 
 def write_csv(result: dict[str, list[str]]):
